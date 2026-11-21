@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#0f766e" />
+  <title>毎日の美肌・コンディショニング習慣チェックリスト</title>
+  <style>
+    :root {
+      --bg: #f4f7f6;
+      --surface: #ffffff;
+      --surface-muted: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --text-muted: #94a3b8;
+      --primary: #0f766e;
+      --primary-light: #ccfbf1;
+      --primary-dark: #115e59;
+      --accent-gold: #d97706;
+      --accent-gold-bg: #fef3c7;
+      --period-primary: #be185d;
+      --period-dark: #9d174d;
+      --period-bg: #fdf2f8;
+      --period-border: #fbcfe8;
+      --period-badge: #fce7f3;
+      --radius: 14px;
+      --shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 48px;
+      transition: background-color 0.25s ease;
+    }
+
+    body.period-active {
+      background-color: #fdf8fa;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: #ffffff;
+      padding: 18px 16px 24px;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+      box-shadow: 0 4px 16px rgba(15, 118, 110, 0.2);
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    body.period-active .app-header {
+      background: linear-gradient(135deg, #be185d 0%, #9d174d 100%);
+      box-shadow: 0 4px 16px rgba(190, 24, 93, 0.22);
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* Date Navigation Bar */
+    .date-nav {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 2px 4px;
+      gap: 2px;
+    }
+
+    .nav-arrow {
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .nav-arrow:active:not(:disabled) {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .date-picker-btn {
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    .date-input-hidden {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .streak-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    /* Past Date Edit Banner inside header */
+    .past-edit-bar {
+      display: none;
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 10px;
+      padding: 7px 12px;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .past-edit-bar.visible {
+      display: flex;
+    }
+
+    .back-today-btn {
+      background: #92400e;
+      color: #ffffff;
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 14px;
+    }
+
+    .app-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    /* Period Toggle Button */
+    .period-toggle {
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+
+    .period-toggle.on {
+      background: #ffffff;
+      color: var(--period-dark);
+      border-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Mode Selector */
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: rgba(0, 0, 0, 0.18);
+      padding: 4px;
+      border-radius: 12px;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 4px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .mode-btn.active {
+      background: #ffffff;
+      color: var(--primary-dark);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    body.period-active .mode-btn.active {
+      color: var(--period-dark);
+    }
+
+    /* Progress Bar */
+    .progress-card {
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    .progress-percent {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #5eead4;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+      width: 0%;
+    }
+
+    body.period-active .progress-fill {
+      background: #fbcfe8;
+    }
+
+    .core-status {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .core-complete {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* Period Banner */
+    .period-banner {
+      display: none;
+      background: var(--period-bg);
+      border: 1px solid var(--period-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      color: var(--period-dark);
+    }
+
+    body.period-active .period-banner {
+      display: block;
+    }
+
+    .period-banner-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin: 0 0 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .period-banner-text {
+      font-size: 0.8rem;
+      margin: 0;
+      color: #831843;
+      line-height: 1.45;
+    }
+
+    .period-guide-link {
+      background: var(--period-primary);
+      color: #ffffff;
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    /* Quick Tools Bar */
+    .tools-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 14px 0 8px;
+    }
+
+    .tool-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 4px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-align: center;
+      transition: transform 0.1s ease, border-color 0.15s ease;
+    }
+
+    .tool-btn.period-btn {
+      border-color: var(--period-border);
+      background: var(--period-bg);
+      color: var(--period-dark);
+    }
+
+    .tool-btn:active {
+      transform: scale(0.98);
+    }
+
+    .tool-btn span.icon {
+      font-size: 1.1rem;
+    }
+
+    /* Category Section */
+    .category-section {
+      margin-top: 18px;
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .category-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 0;
+    }
+
+    body.period-active .category-title {
+      color: var(--period-dark);
+    }
+
+    .category-count {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      background: #e2e8f0;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .checklist-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.15s ease, opacity 0.2s ease;
+      user-select: none;
+    }
+
+    .check-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-item:active {
+      background-color: #f1f5f9;
+    }
+
+    .check-item.optional {
+      background-color: var(--surface-muted);
+      opacity: 0.65;
+    }
+
+    .check-item.checked {
+      background-color: #f0fdfa;
+    }
+
+    body.period-active .check-item.checked {
+      background-color: #fdf2f8;
+    }
+
+    .checkbox-box {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 7px;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      background: #ffffff;
+      transition: all 0.15s ease;
+    }
+
+    .check-item.checked .checkbox-box {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    body.period-active .check-item.checked .checkbox-box {
+      background: var(--period-primary);
+      border-color: var(--period-primary);
+    }
+
+    .checkbox-box svg {
+      width: 15px;
+      height: 15px;
+      stroke: #ffffff;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: all 0.15s ease;
+    }
+
+    .check-item.checked .checkbox-box svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .badge-core {
+      font-size: 0.7rem;
+      font-weight: 800;
+      background: var(--accent-gold-bg);
+      color: #92400e;
+      padding: 1px 7px;
+      border-radius: 5px;
+      border: 1px solid #fde68a;
+    }
+
+    .badge-period {
+      font-size: 0.7rem;
+      font-weight: 800;
+      background: var(--period-badge);
+      color: var(--period-dark);
+      padding: 1px 7px;
+      border-radius: 5px;
+      border: 1px solid var(--period-border);
+    }
+
+    .badge-opt {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 1px 7px;
+      border-radius: 5px;
+    }
+
+    .item-label {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 3px;
+      transition: color 0.15s ease;
+    }
+
+    .check-item.checked .item-label {
+      text-decoration: line-through;
+      color: var(--text-sub);
+    }
+
+    .item-sub {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin: 0;
+    }
+
+    .period-tip-box {
+      margin-top: 7px;
+      background: var(--period-bg);
+      border-left: 3px solid var(--period-primary);
+      padding: 6px 9px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.78rem;
+      color: #831843;
+      font-weight: 600;
+    }
+
+    /* Footer Actions */
+    .footer-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: var(--surface);
+      width: 100%;
+      max-width: 680px;
+      max-height: 86vh;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      padding: 20px 18px 28px;
+      overflow-y: auto;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+      animation: slideUp 0.2s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    /* Timer inside modal */
+    .timer-box {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .timer-display {
+      font-size: 2.2rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--primary-dark);
+      margin: 4px 0 10px;
+    }
+
+    .timer-btns {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .t-btn {
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .t-btn.outline {
+      background: #ffffff;
+      color: var(--primary-dark);
+      border: 1px solid var(--primary);
+    }
+
+    .guide-step {
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .guide-step.period-card {
+      background: var(--period-bg);
+      border-color: var(--period-border);
+    }
+
+    .guide-step h4 {
+      margin: 0 0 4px;
+      font-size: 0.92rem;
+      color: var(--primary-dark);
+    }
+
+    .guide-step.period-card h4 {
+      color: var(--period-dark);
+    }
+
+    .guide-step p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+
+    /* Heatmap */
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .heat-cell {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .heat-cell:active {
+      transform: scale(0.94);
+    }
+
+    .heat-cell.lv1 { background: #ccfbf1; color: #115e59; border-color: #99f6e4; }
+    .heat-cell.lv2 { background: #5eead4; color: #0f172a; border-color: #2dd4bf; }
+    .heat-cell.lv3 { background: #0f766e; color: #ffffff; border-color: #0f766e; }
+    .heat-cell.period-day {
+      box-shadow: inset 0 0 0 2px #be185d;
+    }
+    .heat-cell.selected-day {
+      outline: 2.5px solid #d97706;
+      outline-offset: 1px;
+    }
+
+    .run-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .run-table th, .run-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 9px 6px;
+      text-align: left;
+    }
+
+    .run-table th {
+      background: #f8fafc;
+      font-weight: 800;
+      color: var(--text-sub);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container">
+      <div class="header-top">
+        <div class="date-nav" aria-label="日付切り替え">
+          <button class="nav-arrow" id="prevDayBtn" onclick="shiftDate(-1)" title="前日へ">◀</button>
+          <label class="date-picker-btn" title="カレンダーから日付を選択">
+            <span id="selectedDateLabel">----/--/-- (-)</span>
+            <span style="font-size:0.75rem; opacity:0.85;">▼</span>
+            <input type="date" id="datePickerInput" class="date-input-hidden" onchange="onPickDate(this.value)" />
+          </label>
+          <button class="nav-arrow" id="nextDayBtn" onclick="shiftDate(1)" title="翌日へ">▶</button>
+        </div>
+        <span class="streak-badge" id="streakLabel">🔥 連続 0日</span>
+      </div>
+
+      <div class="past-edit-bar" id="pastEditBar">
+        <span id="pastEditText">⏪ 過去の日付を編集中</span>
+        <button class="back-today-btn" onclick="goToday()">今日に戻る</button>
+      </div>
+
+      <div class="title-row">
+        <h1 class="app-title">美肌・コンディショニング習慣</h1>
+        <button class="period-toggle" id="periodToggleBtn" onclick="togglePeriod()" aria-pressed="false">
+          <span>🌙</span>
+          <span id="periodToggleText">生理中モード OFF</span>
+        </button>
+      </div>
+
+      <div class="mode-switch" role="tablist" aria-label="勤務形態モード">
+        <button class="mode-btn active" data-mode="office" onclick="setMode('office')">🏢 出社日</button>
+        <button class="mode-btn" data-mode="home" onclick="setMode('home')">🏠 在宅・休日</button>
+        <button class="mode-btn" data-mode="rest" onclick="setMode('rest')">🛌 完全休養</button>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <span id="progressTitleLabel">本日の達成状況（対象 <strong id="targetCount">0</strong> 項目）</span>
+          <span><strong class="progress-percent" id="progressPercent">0%</strong> (<span id="doneCount">0</span>/<span id="totalCount">0</span>)</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="core-status">
+          <span>★ 美肌コア3項目：<strong id="coreCount">0 / 3</strong></span>
+          <span id="coreBadge">死守目標</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="period-banner" id="periodBanner">
+      <div class="period-banner-title">
+        <span>🌙 生理中・回復優先モード適用中</span>
+        <button class="period-guide-link" onclick="openModal('periodModal')">対処法まとめを見る</button>
+      </div>
+      <p class="period-banner-text">
+        ランニング・筋トレの負荷は自動で「任意（お休みOK）」に切り替わっています。無理な運動は控え、<strong>鉄分・温め・保湿・睡眠</strong>を優先してください。
+      </p>
+    </div>
+
+    <div class="tools-bar">
+      <button class="tool-btn period-btn" onclick="openModal('periodModal')">
+        <span class="icon">🌙</span>
+        <span>生理中の対処法</span>
+      </button>
+      <button class="tool-btn" onclick="openModal('muscleModal')">
+        <span class="icon">💪</span>
+        <span>5分筋トレ手順</span>
+      </button>
+      <button class="tool-btn" onclick="openModal('runModal')">
+        <span class="icon">🏃</span>
+        <span>2→3km計画表</span>
+      </button>
+      <button class="tool-btn" onclick="openModal('historyModal')">
+        <span class="icon">📅</span>
+        <span>達成履歴 (30日)</span>
+      </button>
+    </div>
+
+    <div id="checklistRoot"></div>
+
+    <div class="footer-actions">
+      <button class="btn-secondary" id="resetBtn" onclick="resetSelectedDate()">この日のチェックをリセット</button>
+      <span style="font-size:0.75rem; color:var(--text-muted);">※ブラウザに自動保存されます</span>
+    </div>
+  </main>
+
+  <!-- 生理中の対処法 Modal -->
+  <div class="modal-backdrop" id="periodModal" onclick="backdropClose(event, 'periodModal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">🌙 生理中の習慣調整＆セルフケア指針</h3>
+        <button class="close-btn" onclick="closeModal('periodModal')">×</button>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-sub); margin-top:0;">
+        生理中はバリア機能低下・貧血傾向・むくみが起きやすいため、<strong>「負荷を落として循環と回復を優先する」</strong>のが最短の美肌ケアです。
+      </p>
+
+      <div class="guide-step period-card">
+        <h4>1. 運動：ランニング・筋トレは休んでOK（肩甲骨ほぐし中心）</h4>
+        <p>
+          ・<strong>徒歩通勤：</strong>体調が良ければ継続可。早歩きせずゆったりペースで下肢のむくみ解消に。<br>
+          ・<strong>ランニング：</strong>無理に走らずウォーキングへ変更、または完全休養でOK。<br>
+          ・<strong>筋トレ：</strong>腹圧のかかるスクワット・腕立ては休み、<strong>「タオル・ラットプルダウン（肩甲骨寄せ）」やストレッチ</strong>だけ軽く行うと顔の血行が保てます。
+        </p>
+      </div>
+
+      <div class="guide-step period-card">
+        <h4>2. 食事・サプリ：「鉄分＋ビタミンC」を最優先で補強</h4>
+        <p>
+          ・経血による鉄損失で青ぐすみ・疲労が出やすいため、<strong>赤身肉・魚・卵・小松菜・ほうれん草</strong>をビタミンC（ピーマン・ブロッコリー・果物）と一緒に摂取。<br>
+          ・<strong>アスタキサンチン</strong>は食後に継続し、ゆらぎやすい肌の酸化をブロック。<br>
+          ・甘いもの・塩分・カフェインの摂りすぎを控え、白湯やノンカフェインティーで冷えとむくみを予防。
+        </p>
+      </div>
+
+      <div class="guide-step period-card">
+        <h4>3. スキンケア：摩擦レス＆徹底保湿（攻めのケアはお休み）</h4>
+        <p>
+          ・角層の水分保持力が落ちるため、スクラブや強い角質ケアは中止。<br>
+          ・やさしい洗顔＋高保湿ケアに徹し、日中の外出時は引き続き日焼け止めで光老化を防ぎます。
+        </p>
+      </div>
+
+      <div class="guide-step period-card">
+        <h4>4. 夜のルーティン：お腹・腰の温めと睡眠の質を死守</h4>
+        <p>
+          ・<strong>自宅禁酒</strong>を継続し、アルコールによるむくみ・睡眠の質低下を防止。<br>
+          ・就寝60〜90分前の入浴で骨盤周り・足元を温め、<strong>寝る前1時間のスマホ断ち</strong>で自律神経と成長ホルモンの分泌を整えます。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5分筋トレ Modal -->
+  <div class="modal-backdrop" id="muscleModal" onclick="backdropClose(event, 'muscleModal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">💪 5分間・美肌＆肩こり解消筋トレ（週2〜3回）</h3>
+        <button class="close-btn" onclick="closeModal('muscleModal')">×</button>
+      </div>
+
+      <div class="timer-box">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--primary-dark);">インターバル・タイマー（セット間休憩 20〜30秒）</div>
+        <div class="timer-display" id="timerDisplay">00:30</div>
+        <div class="timer-btns">
+          <button class="t-btn" onclick="startTimer(20)">20秒開始</button>
+          <button class="t-btn" onclick="startTimer(30)">30秒開始</button>
+          <button class="t-btn" onclick="startTimer(60)">60秒開始</button>
+          <button class="t-btn outline" onclick="stopTimer()">停止/リセット</button>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <h4>1. スロー・ワイドスクワット（12〜15回 × 2セット）</h4>
+        <p>足を肩幅の1.5倍・つま先45度外向き。<strong>3秒かけて下ろし、1秒キープ、2秒で戻る。</strong>真皮のハリ（ビグリカン）と成長ホルモンを刺激。※生理中は無理せずお休みOK</p>
+      </div>
+      <div class="guide-step">
+        <h4>2. タオル・ラットプルダウン（15〜20回 × 2セット）</h4>
+        <p>フェイスタオルを頭上でピンと張り、外に引きながら<strong>首の後ろへ3秒かけて下ろす。</strong>肩甲骨を寄せ、首・肩の凝りと顔の血流を改善。※生理中のリフレッシュにも最適</p>
+      </div>
+      <div class="guide-step">
+        <h4>3. プッシュアップ／腕立て伏せ（10〜15回 × 2セット）</h4>
+        <p>膝つき可。胸が床につくギリギリまでゆっくり下ろす。鎖骨・デコルテ周りのリンパと顔下半分の血流を押し上げます。※生理中は無理せずお休みOK</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2->3km Run Modal -->
+  <div class="modal-backdrop" id="runModal" onclick="backdropClose(event, 'runModal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">🏃 2km → 3km ステップアップ計画（全6回）</h3>
+        <button class="close-btn" onclick="closeModal('runModal')">×</button>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-sub); margin-top:0;">最初の1kmは7分15〜20秒のゆっくりペースで入り、後半の歩行で心拍数をリセットしながら距離を伸ばします。（※生理中はステップを一時停止し、体調回復後に再開してください）</p>
+      <table class="run-table">
+        <thead>
+          <tr>
+            <th>回数</th>
+            <th>メニュー構成（計3.0km）</th>
+            <th>目安時間</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1回目</strong></td><td>ラン 2.0km ＋ 早歩き 1.0km</td><td>約23〜24分</td></tr>
+          <tr><td><strong>2回目</strong></td><td>ラン 2.0km ＋ 早歩き 0.5km ＋ ラン 0.5km</td><td>約22〜23分</td></tr>
+          <tr><td><strong>3回目</strong></td><td>ラン 2.2km ＋ 早歩き 0.3km ＋ ラン 0.5km</td><td>約22分</td></tr>
+          <tr><td><strong>4回目</strong></td><td>ラン 2.5km ＋ 早歩き 0.2km ＋ ラン 0.3km</td><td>約21〜22分</td></tr>
+          <tr><td><strong>5回目</strong></td><td>ラン 2.7km ＋ 早歩き 0.1km ＋ ラン 0.2km</td><td>約21分</td></tr>
+          <tr><td><strong>6回目</strong></td><td><strong>ラン 3.0km（連続走行達成）</strong></td><td><strong>約21分</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal-backdrop" id="historyModal" onclick="backdropClose(event, 'historyModal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">📅 過去30日間の達成履歴（タップでその日を編集）</h3>
+        <button class="close-btn" onclick="closeModal('historyModal')">×</button>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-sub); margin-top:0;">
+        日付マスをタップするとその日のチェックリストを開いて修正できます。ピンク枠は生理中モード記録日です。
+      </p>
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    const ITEMS = [
+      {
+        id: "1",
+        label: "【出社日】往復50分の徒歩通勤（早歩きを意識）",
+        sub: "週3〜4回実施・血流維持と血糖値スパイク抑制",
+        periodLabel: "【出社日・生理中】往復50分のゆったり徒歩通勤（無理ない範囲で）",
+        periodTip: "🌙 生理中は早歩きせずゆったりペースでOK。ふくらはぎのポンプ作用でむくみを流します（腹痛・貧血時は無理しない）。",
+        category: "運動（その日の予定に合わせて選択）",
+        core: false,
+        periodPriority: false,
+        modes: ["office"],
+        periodModes: ["office"]
+      },
+      {
+        id: "2",
+        label: "【在宅・休日】2〜3kmのランニング（1km7分前後）",
+        sub: "週3回実施・後半キツい時は早歩きを挟んでOK",
+        periodLabel: "【生理中・任意】軽いウォーキングまたは完全休養",
+        periodTip: "🌙 生理中はランニングをお休みしてOK。気分転換したい場合のみ15〜20分の軽い散歩に切り替えてください。",
+        category: "運動（その日の予定に合わせて選択）",
+        core: false,
+        periodPriority: false,
+        modes: ["home"],
+        periodModes: []
+      },
+      {
+        id: "3",
+        label: "【1日おき】5分間・美肌＆肩こり解消筋トレ",
+        sub: "週2〜3回・スローワイドスクワット／タオルラットプルダウン／腕立て伏せ",
+        periodLabel: "【生理中・任意】肩甲骨ほぐし（タオルラットプルダウン）＆ストレッチ",
+        periodTip: "🌙 腹圧のかかるスクワット・腕立ては休み、タオルを引く肩甲骨ほぐしだけ軽く行うと首・肩の凝りと顔のくすみが抜けます。",
+        category: "運動（その日の予定に合わせて選択）",
+        core: false,
+        periodPriority: false,
+        modes: ["office", "home"],
+        periodModes: []
+      },
+      {
+        id: "4",
+        label: "脂質を含む食後にアスタキサンチンを摂取",
+        sub: "卵・肉・魚・オイル等と一緒に摂り吸収率を最大化",
+        periodTip: "🌙 生理中は紫外線や酸化ストレスに敏感になるため、脂質を含む食後に継続摂取して肌のゆらぎを防ぎます。",
+        category: "食事・サプリ（抗酸化・抗糖化・鉄分）",
+        core: true,
+        periodPriority: false,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "5",
+        label: "ベジファースト＆空腹時の甘い飲み物・お菓子を回避",
+        sub: "血糖値急上昇による「黄ぐすみ（糖化）」を防止",
+        periodTip: "🌙 生理中は甘いもの・塩分を欲しやすくなります。間食は素焼きナッツや高カカオチョコにし、むくみと糖化を予防。",
+        category: "食事・サプリ（抗酸化・抗糖化・鉄分）",
+        core: false,
+        periodPriority: false,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "6",
+        label: "タンパク質＋「鉄分＆ビタミンC」を食事で確保",
+        sub: "鶏肉・卵・赤身魚・ほうれん草＋ピーマン・ブロッコリー・果物など",
+        periodLabel: "【生理中重点】「鉄分＋ビタミンC」＆タンパク質を最優先で補給",
+        periodTip: "🌙 経血で鉄分が失われ青ぐすみ・だるさが出やすい時期です。赤身肉・魚・卵・小松菜＋ビタミンCを毎食意識して補いましょう。",
+        category: "食事・サプリ（抗酸化・抗糖化・鉄分）",
+        core: false,
+        periodPriority: true,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "7",
+        label: "朝の外出・ランニング前の日焼け止め塗布",
+        sub: "曇りの日も実施し、光老化とメラニン沈着をブロック",
+        periodTip: "🌙 生理中はバリア機能低下で紫外線ダメージを受けやすいため、低刺激タイプの日焼け止めで丁寧にガードします。",
+        category: "スキンケア・紫外線対策",
+        core: true,
+        periodPriority: false,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "8",
+        label: "運動・帰宅後の速やかな洗顔と保湿",
+        sub: "酸化した皮脂や汗を早めに洗い流しバリア機能を保護",
+        periodLabel: "【生理中重点】摩擦レス洗顔＆徹底保湿（攻めのケアはお休み）",
+        periodTip: "🌙 角層の水分保持力が落ちる時期です。スクラブや刺激の強いケアは控え、やさしい洗顔と丁寧な保湿に徹してください。",
+        category: "スキンケア・紫外線対策",
+        core: false,
+        periodPriority: true,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "9",
+        label: "自宅でのアルコール摂取なし（休肝日の継続）",
+        sub: "肝臓を休め、ビタミンと栄養を100%肌と筋肉の修復へ",
+        periodTip: "🌙 アルコールはむくみ・冷え・睡眠の質低下を招きやすいため、生理中も控えることで翌朝の顔色が安定します。",
+        category: "夜の睡眠ルーティン",
+        core: true,
+        periodPriority: false,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "10",
+        label: "就寝60〜90分前の入浴＆水分補給（白湯・ノンカフェイン）",
+        sub: "深部体温の低下による深い睡眠と夜間の血液濃縮防止",
+        periodLabel: "【生理中重点】湯船でお腹・腰を温め＋白湯・ノンカフェイン補給",
+        periodTip: "🌙 骨盤周りと足元を温めて血流を促し、カフェインを控えて白湯やハーブティーで夜間の冷え・血液濃縮を防ぎます。",
+        category: "夜の睡眠ルーティン",
+        core: false,
+        periodPriority: true,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      },
+      {
+        id: "11",
+        label: "寝る前1時間のスマホ断ち＆照明トーンダウン",
+        sub: "成長ホルモンの分泌を最大化し、真皮のハリとターンオーバーを促進",
+        periodTip: "🌙 生理中は自律神経が乱れやすいため、寝る前1時間はスマホを置いて照明を落とし、深い睡眠と回復を優先します。",
+        category: "夜の睡眠ルーティン",
+        core: true,
+        periodPriority: false,
+        modes: ["office", "home", "rest"],
+        periodModes: ["office", "home", "rest"]
+      }
+    ];
+
+    const CATEGORIES = [
+      "運動（その日の予定に合わせて選択）",
+      "食事・サプリ（抗酸化・抗糖化・鉄分）",
+      "スキンケア・紫外線対策",
+      "夜の睡眠ルーティン"
+    ];
+
+    const STORAGE_KEY = "bihada_habit_tracker_v2";
+    const LEGACY_KEY = "bihada_habit_tracker_v1";
+
+    function dateToKey(dt) {
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth() + 1).padStart(2, "0");
+      const d = String(dt.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function keyToDate(dateStr) {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function getTodayKey() {
+      return dateToKey(new Date());
+    }
+
+    function formatJapaneseDate(dateStr) {
+      const dt = keyToDate(dateStr);
+      const days = ["日", "月", "火", "水", "木", "金", "土"];
+      return `${dt.getFullYear()}年${dt.getMonth() + 1}月${dt.getDate()}日 (${days[dt.getDay()]})`;
+    }
+
+    function formatShortDate(dateStr) {
+      const dt = keyToDate(dateStr);
+      const days = ["日", "月", "火", "水", "木", "金", "土"];
+      return `${dt.getMonth() + 1}月${dt.getDate()}日(${days[dt.getDay()]})`;
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+        return raw ? JSON.parse(raw) : { records: {} };
+      } catch (e) {
+        return { records: {} };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (e) {}
+    }
+
+    let store = loadStore();
+    let lastKnownToday = getTodayKey();
+    let selectedDate = lastKnownToday;
+
+    function getDayRecord(dateKey) {
+      if (!store.records[dateKey]) {
+        const dow = keyToDate(dateKey).getDay();
+        const defaultMode = (dow === 0) ? "rest" : (dow === 6 ? "home" : "office");
+        store.records[dateKey] = {
+          mode: defaultMode,
+          isPeriod: false,
+          checked: {}
+        };
+        saveStore(store);
+      }
+      if (typeof store.records[dateKey].isPeriod !== "boolean") {
+        store.records[dateKey].isPeriod = false;
+      }
+      return store.records[dateKey];
+    }
+
+    function shiftDate(deltaDays) {
+      const dt = keyToDate(selectedDate);
+      dt.setDate(dt.getDate() + deltaDays);
+      const nextKey = dateToKey(dt);
+      const todayKey = getTodayKey();
+      if (nextKey > todayKey) return;
+      selectedDate = nextKey;
+      render();
+    }
+
+    function onPickDate(val) {
+      if (!val) return;
+      const todayKey = getTodayKey();
+      selectedDate = val > todayKey ? todayKey : val;
+      render();
+    }
+
+    function goToday() {
+      selectedDate = getTodayKey();
+      render();
+    }
+
+    function jumpToDateFromHistory(dateKey) {
+      selectedDate = dateKey;
+      closeModal("historyModal");
+      render();
+    }
+
+    function setMode(mode) {
+      const rec = getDayRecord(selectedDate);
+      rec.mode = mode;
+      saveStore(store);
+      render();
+    }
+
+    function togglePeriod() {
+      const rec = getDayRecord(selectedDate);
+      rec.isPeriod = !rec.isPeriod;
+      saveStore(store);
+      render();
+    }
+
+    function toggleItem(id) {
+      const rec = getDayRecord(selectedDate);
+      rec.checked[id] = !rec.checked[id];
+      saveStore(store);
+      render();
+    }
+
+    function resetSelectedDate() {
+      const rec = getDayRecord(selectedDate);
+      rec.checked = {};
+      saveStore(store);
+      render();
+    }
+
+    function isItemTarget(item, rec) {
+      const activeModes = rec.isPeriod ? item.periodModes : item.modes;
+      return activeModes.includes(rec.mode);
+    }
+
+    function calcStats(dateKey) {
+      const rec = store.records[dateKey];
+      if (!rec) return { done: 0, total: 0, pct: 0, coreDone: 0, isPeriod: false };
+      const targetItems = ITEMS.filter(it => isItemTarget(it, rec));
+      const total = targetItems.length;
+      const done = targetItems.filter(it => rec.checked[it.id]).length;
+      const extraDone = ITEMS.filter(it => !isItemTarget(it, rec) && rec.checked[it.id]).length;
+      const effectiveDone = Math.min(total, done + extraDone);
+      const pct = total > 0 ? Math.round((effectiveDone / total) * 100) : 0;
+
+      const c1 = !!rec.checked["4"];
+      const c2 = !!rec.checked["7"];
+      const c3 = !!(rec.checked["9"] && rec.checked["11"]);
+      const coreDone = [c1, c2, c3].filter(Boolean).length;
+
+      return { done: effectiveDone, total, pct, coreDone, isPeriod: !!rec.isPeriod };
+    }
+
+    function calcStreak() {
+      let streak = 0;
+      const now = new Date();
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = dateToKey(d);
+        const st = calcStats(key);
+        if (st.pct >= 60 || st.coreDone >= 2) {
+          streak++;
+        } else if (i === 0) {
+          continue;
+        } else {
+          break;
+        }
+      }
+      return streak;
+    }
+
+    function render() {
+      const realToday = getTodayKey();
+      // Only auto-advance if user was viewing "today" and date rolled over midnight
+      if (realToday !== lastKnownToday) {
+        if (selectedDate === lastKnownToday) {
+          selectedDate = realToday;
+        }
+        lastKnownToday = realToday;
+      }
+
+      const isToday = (selectedDate === realToday);
+      const rec = getDayRecord(selectedDate);
+
+      // Date nav controls
+      document.getElementById("selectedDateLabel").textContent = formatJapaneseDate(selectedDate);
+      const picker = document.getElementById("datePickerInput");
+      picker.value = selectedDate;
+      picker.max = realToday;
+      document.getElementById("nextDayBtn").disabled = isToday;
+
+      // Past date indicator banner
+      const pastBar = document.getElementById("pastEditBar");
+      if (!isToday) {
+        pastBar.classList.add("visible");
+        document.getElementById("pastEditText").textContent = `⏪ ${formatShortDate(selectedDate)} の記録を編集中`;
+      } else {
+        pastBar.classList.remove("visible");
+      }
+
+      // Period UI state
+      document.body.classList.toggle("period-active", rec.isPeriod);
+      const pBtn = document.getElementById("periodToggleBtn");
+      const pText = document.getElementById("periodToggleText");
+      pBtn.classList.toggle("on", rec.isPeriod);
+      pBtn.setAttribute("aria-pressed", String(rec.isPeriod));
+      pText.textContent = rec.isPeriod ? "生理中モード ON" : "生理中モード OFF";
+
+      document.getElementById("streakLabel").textContent = `🔥 連続 ${calcStreak()}日`;
+
+      // Mode buttons
+      document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === rec.mode);
+      });
+
+      // Stats
+      const stats = calcStats(selectedDate);
+      const dayWord = isToday ? "本日" : formatShortDate(selectedDate);
+      document.getElementById("progressTitleLabel").innerHTML = `${dayWord}の達成状況（対象 <strong id="targetCount">${stats.total}</strong> 項目）`;
+      document.getElementById("doneCount").textContent = stats.done;
+      document.getElementById("totalCount").textContent = stats.total;
+      document.getElementById("progressPercent").textContent = `${stats.pct}%`;
+      document.getElementById("progressFill").style.width = `${stats.pct}%`;
+      document.getElementById("coreCount").textContent = `${stats.coreDone} / 3`;
+
+      const coreBadge = document.getElementById("coreBadge");
+      if (stats.coreDone === 3) {
+        coreBadge.textContent = "✨ コア達成！";
+        coreBadge.className = "core-complete";
+      } else {
+        coreBadge.textContent = "死守目標";
+        coreBadge.className = "";
+      }
+
+      // Render categories
+      const root = document.getElementById("checklistRoot");
+      root.innerHTML = "";
+
+      CATEGORIES.forEach(cat => {
+        const catItems = ITEMS.filter(it => it.category === cat);
+        const catChecked = catItems.filter(it => rec.checked[it.id]).length;
+
+        const section = document.createElement("section");
+        section.className = "category-section";
+
+        section.innerHTML = `
+          <div class="category-header">
+            <h2 class="category-title">${cat}</h2>
+            <span class="category-count">${catChecked} / ${catItems.length}</span>
+          </div>
+          <div class="checklist-card"></div>
+        `;
+
+        const card = section.querySelector(".checklist-card");
+
+        catItems.forEach(item => {
+          const isChecked = !!rec.checked[item.id];
+          const isTarget = isItemTarget(item, rec);
+
+          const row = document.createElement("div");
+          row.className = `check-item ${isChecked ? "checked" : ""} ${!isTarget ? "optional" : ""}`;
+          row.onclick = () => toggleItem(item.id);
+
+          let badgesHtml = "";
+          if (item.core) {
+            badgesHtml += `<span class="badge-core">★ 美肌コア</span>`;
+          }
+          if (rec.isPeriod && item.periodPriority) {
+            badgesHtml += `<span class="badge-period">🌙 生理中重点</span>`;
+          }
+          if (!isTarget) {
+            badgesHtml += `<span class="badge-opt">${rec.isPeriod ? "生理中お休みOK（任意）" : "この日のモード外（任意）"}</span>`;
+          }
+
+          const displayLabel = (rec.isPeriod && item.periodLabel) ? item.periodLabel : item.label;
+          const periodTipHtml = (rec.isPeriod && item.periodTip)
+            ? `<div class="period-tip-box">${item.periodTip}</div>`
+            : "";
+
+          row.innerHTML = `
+            <div class="checkbox-box">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="item-content">
+              ${badgesHtml ? `<div class="item-badges">${badgesHtml}</div>` : ""}
+              <p class="item-label">${displayLabel}</p>
+              <p class="item-sub">${item.sub}</p>
+              ${periodTipHtml}
+            </div>
+          `;
+          card.appendChild(row);
+        });
+
+        root.appendChild(section);
+      });
+    }
+
+    // Modal controls
+    function openModal(id) {
+      if (id === "historyModal") renderHistory();
+      document.getElementById(id).classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    function backdropClose(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    // Interval timer for 5-min workout
+    let timerInterval = null;
+    let remainingSec = 30;
+
+    function updateTimerText() {
+      const m = String(Math.floor(remainingSec / 60)).padStart(2, "0");
+      const s = String(remainingSec % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `${m}:${s}`;
+    }
+
+    function startTimer(sec) {
+      stopTimer();
+      remainingSec = sec;
+      updateTimerText();
+      timerInterval = setInterval(() => {
+        remainingSec--;
+        updateTimerText();
+        if (remainingSec <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          document.getElementById("timerDisplay").textContent = "完了！";
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      remainingSec = 30;
+      updateTimerText();
+    }
+
+    // 30-day history heatmap (clickable to edit any day)
+    function renderHistory() {
+      const grid = document.getElementById("heatmapGrid");
+      grid.innerHTML = "";
+      const now = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = dateToKey(d);
+        const st = calcStats(key);
+        let lv = "";
+        if (st.pct >= 90) lv = "lv3";
+        else if (st.pct >= 70) lv = "lv2";
+        else if (st.pct >= 40) lv = "lv1";
+
+        const cell = document.createElement("div");
+        cell.className = `heat-cell ${lv} ${st.isPeriod ? "period-day" : ""} ${key === selectedDate ? "selected-day" : ""}`;
+        cell.title = `${formatShortDate(key)} を開いて編集`;
+        cell.onclick = () => jumpToDateFromHistory(key);
+        cell.innerHTML = `<span>${d.getMonth() + 1}/${d.getDate()}</span><span style="font-size:0.65rem;">${st.pct > 0 ? st.pct + "%" : "-"}</span>`;
+        grid.appendChild(cell);
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
